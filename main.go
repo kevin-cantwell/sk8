@@ -28,6 +28,9 @@ func main() {
 
 func obfuscateCSV(in io.Reader, out io.Writer) {
 	fields := strings.Split(*fieldsFlag, ",")
+	if *fieldsFlag == "" {
+		fields = nil
+	}
 	fieldsToObfuscate := make(map[string]bool, len(fields))
 	for _, field := range fields {
 		fieldsToObfuscate[field] = true
@@ -54,7 +57,7 @@ func obfuscateCSV(in io.Reader, out io.Writer) {
 		}
 
 		for i, val := range record {
-			if !fieldsToObfuscate[header[i]] {
+			if len(fieldsToObfuscate) > 0 && !fieldsToObfuscate[header[i]] {
 				continue
 			}
 			record[i] = hashValue(val)
